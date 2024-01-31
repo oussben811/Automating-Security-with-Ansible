@@ -1,0 +1,12 @@
+---
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: change les droits d un fichier
+    file:
+      path: /var/www/html/index.html
+      owner: marwa
+      group: marwa
+      mode: "1655"

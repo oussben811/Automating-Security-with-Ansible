@@ -1,0 +1,14 @@
+---
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: copy html file for site
+    tags: apache, apache2, httpd
+    copy:
+      src: website.html
+      dest: /car/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644

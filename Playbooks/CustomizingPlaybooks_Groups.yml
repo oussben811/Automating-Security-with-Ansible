@@ -1,0 +1,38 @@
+---
+ 
+ - hosts: all
+   become: true
+   pre_tasks:
+ 
+   - name: install updates (CentOS)
+     yum:
+       update_only: yes
+       update_cache: yes
+     when: ansible_distribution == "CentOS"
+ 
+   - name: install updates (Ubuntu)
+     apt:
+       upgrade: dist
+       update_cache: yes
+     when: ansible_distribution == "Ubuntu"
+
+ 
+ - hosts: web_servers
+   become: true
+
+   - name: install httpd package (CentOS)
+     yum:
+       name: 
+         - httpd
+       state: latest
+     when: ansible_distribution == "CentOS"
+ 
+   - name: install apach2 package (Ubuntu)
+     apt:
+       name: 
+         - apache2
+         - libapach2-mod-php
+       state: latest
+     when: ansible_distribution == "Ubuntu"
+ 
+ 

@@ -1,0 +1,23 @@
+- hosts: all
+   become: true
+   tasks:
+ 
+   - name: create oussben2 user
+     user:
+       name: oussben2
+       groups: root
+     
+   - name: add ssh key for oussben2
+     tags: always
+     authorized_key:
+       user: oussben2
+       key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAe7/ofWLNBq3+fRn3UmgAizdicLs9vcS4Oj8VSOD1S/ ansible"
+         
+   - name: add sudoers file for oussben2
+     tags: always
+     copy:
+       src: sudoer_oussben2
+       dest: /etc/sudoers.d/oussben2
+       owner: root
+       group: root
+       mode: 0440

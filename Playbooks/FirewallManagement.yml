@@ -1,0 +1,71 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Install UFW
+    apt: 
+      name: ufw
+      state: present
+    when: ansible_distribution == "Ubuntu"
+
+    - name: Allow SSH (Port 22)
+      ufw: 
+        rule: allow
+        port: 22
+      when: ansible_distribution == "Ubuntu"
+      
+    - name: Allow HTTP (Port 80)
+      ufw: 
+        rule: allow
+        port: 80
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Allow HTTPS (Port 443)
+      ufw: 
+        rule: allow
+        port: 443
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Deny All Incoming Traffic by Default
+      ufw: 
+        policy: deny
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Enable UFW
+      ufw: 
+        state: enabled
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install firewalld
+      yum: 
+        name: firewalld
+        state: present
+     when: ansible_distribution == "CentOS"
+
+    - name: Start firewalld
+      systemd: 
+        name: firewalld
+        state: started
+        enabled: yes
+      when: ansible_distribution == "CentOS"
+     
+    - name: Allow SSH (Port 22)
+      firewalld: 
+        service: ssh
+        permanent: yes
+        state: enabled
+        immediate: yes
+      when: ansible_distribution == "CentOS"
+      
+     - name: Allow HTTP (Port 80)
+       firewalld: 
+        port: 80/tcp
+        permanent: yes
+        state: enabled
+        immediate: yes
+       when: ansible_distribution == "CentOS"
+
+      
+    

@@ -1,0 +1,33 @@
+---
+
+- hosts: 192.168.10.6
+  become: true
+
+  tasks:
+    - name: Install SELinux
+      yum:
+        name: policycoreutils
+        state: present
+
+    - name: Check SELinux status
+      command: sestatus
+      register: selinux_status
+    - debug:
+        var: selinux_status.stdout_lines
+
+    - name: Set SELinux to Enforcing
+      selinux:
+        policy: targeted
+        state: enforcing
+
+    - name:  Set SELinux content for a specific directory
+      sefcontext: 
+        target: /mywebsite/html
+        setype: httpd_sys_content_t
+        state: present
+
+    - name: Configure SELinux logging and auditing
+      lineinfile:
+        path: /etc/audit/audit.conf
+        line: "log_file = /var/log/audit/audit.log"
+      notify: restart auditd

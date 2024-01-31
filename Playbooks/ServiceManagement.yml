@@ -1,0 +1,21 @@
+---
+ 
+ - hosts: all
+   become: true
+   pre_tasks:
+   
+  - name: install httpd package (CentOS)
+       tags: apache,centos,httpd
+       yum:
+         name:
+           - httpd
+         state: latest
+       when: ansible_distribution == "CentOS"
+
+   - name: start and enable httpd (CentOS)
+     tags: apache,centos,httpd
+     service:
+       name: httpd
+       state: started
+       enabled: yes
+     when: ansible_distribution == "CentOS"
